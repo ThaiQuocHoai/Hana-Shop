@@ -46,12 +46,12 @@ public class SearchServlet extends HttpServlet {
 
         tblFoodDAO dao = new tblFoodDAO();
         HttpSession session = request.getSession();
-        String min = request.getParameter("txtMin");
-        String max = request.getParameter("txtMax");
+        String min = "0";
+        String max = "1000000";
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         String now = dateFormat.format(new Date());
         String searchValue = request.getParameter("txtSearchValue");
-        String cate = request.getParameter("dropList");
+        String cate = "All";
         String query = "";
         String queryCount = "";
         int indexS = 0;
@@ -59,18 +59,18 @@ public class SearchServlet extends HttpServlet {
         int index = 1;
 
         try {
-            if (min.isEmpty()) {
-                min = "0";
+            if(request.getParameter("txtMin") != null){
+                min = request.getParameter("txtMin");
             }
-            if (max.isEmpty()) {
-                max = "1000000";
-            }
-
-            if (cate.isEmpty()) {
-                cate = "All";
+            if (request.getParameter("txtMax") != null) {
+                max = request.getParameter("txtMax");
             }
 
-            if (request.getParameter("index") == null) {
+            if (request.getParameter("dropList") != null) {
+                cate = request.getParameter("dropList");
+            }
+
+            if (request.getParameter("index") == null || request.getParameter("index").isEmpty()) {
                 index = 1;
             } else {
                 index = Integer.parseInt(request.getParameter("index"));

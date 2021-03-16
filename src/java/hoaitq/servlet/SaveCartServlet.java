@@ -8,7 +8,6 @@ package hoaitq.servlet;
 import hoaitq.cart.CartDTO;
 import hoaitq.cart.CartObject;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

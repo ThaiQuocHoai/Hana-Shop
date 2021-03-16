@@ -120,4 +120,71 @@ public class tblUserDAO implements Serializable {
         return null;
     }
 
+    public boolean checkUserNameDuplicate(String userName) throws NamingException, SQLException {
+        boolean result = false;
+        Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            con = DBHelpers.getConnection();
+            if (con != null) {
+                String sql = "select fullname "
+                        + "from tblUser "
+                        + "where userID = ?   ";
+                pst = con.prepareStatement(sql);
+                pst.setString(1, userName);
+                rs = pst.executeQuery();
+                if (rs.next()) {
+                    result = true;
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+
+            if (pst != null) {
+                pst.close();
+            }
+
+            if (con != null) {
+                con.close();
+            }
+        }
+        return result;
+    }
+
+    public int insertUser(String userId, String fullname) throws NamingException, SQLException {
+        Connection con = null;
+        PreparedStatement pst = null;
+        int rs = 0;
+        try {
+            con = DBHelpers.getConnection();
+            if (con != null) {
+                String sql = "insert into tblUser(userID, password, fullname, phoneNumber, Address, dob, isadmin) "
+                        + "values(?,?,?,?,?,?,?) ";
+                pst = con.prepareStatement(sql);
+                pst.setString(1, userId);
+                pst.setString(2, "");
+                pst.setString(3, fullname);
+                pst.setString(4, "");
+                pst.setString(5, "");
+                pst.setString(6, "");
+                pst.setInt(7, 0);
+                rs = pst.executeUpdate();
+                if (rs > 0) {
+                    return rs;
+                }
+            }
+        } finally {
+            if (pst != null) {
+                pst.close();
+            }
+
+            if (con != null) {
+                con.close();
+            }
+        }
+        return rs;
+    }
 }

@@ -6,7 +6,6 @@
 package hoaitq.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -38,6 +37,8 @@ public class DispatchServlet extends HttpServlet {
     private final String ADD_PAGE = "AddServlet";
     private final String ADD_CONTROLLER = "AddNewServlet";
     private final String DELETE_ITEM_CONTROLLER = "DeleteItemServlet";
+    // them duong dan den loginGgServlet
+    private final String LOGIN_GOOGLE_CONTROLLER = "LoginGgServlet";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -94,6 +95,8 @@ public class DispatchServlet extends HttpServlet {
                 url = ADD_CONTROLLER;
             } else if (button.equals("Delete items")) {
                 url = DELETE_ITEM_CONTROLLER;
+            } else if (button.equals("Login Google")) {
+                url = LOGIN_GOOGLE_CONTROLLER;
             }
 
         } finally {

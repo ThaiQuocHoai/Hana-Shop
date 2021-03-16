@@ -6,11 +6,9 @@
 package hoaitq.servlet;
 
 import hoaitq.tblUser.tblUserDAO;
-import hoaitq.tblUser.tblUserDTO;
 import java.io.IOException;
 import java.sql.SQLException;
 import javax.naming.NamingException;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,31 +20,18 @@ import javax.servlet.http.HttpSession;
  *
  * @author QH
  */
-@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "LoginGgServlet", urlPatterns = {"/LoginGgServlet"})
+public class LoginGgServlet extends HttpServlet {
 
-//    private final String HOME_PAGE= "index.jsp";
-    private final String LOGIN_PAGE = "login.jsp";
-    private final String SHOPPING_PAGE = "SearchServlet";
-    private final String MANAGER_PAGE = "ManagerServlet";
+    private static final String ERROR = "error.jsp";
+    private static final String SUCCESS = "SearchServlet";
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String username = request.getParameter("txtUsername");
-        String password = request.getParameter("txtPassword");
-        String fullname = "";
-        String url = LOGIN_PAGE;
+        // Tao servlet login gg de check login cua nguoi dung
         HttpSession sessionScope = request.getSession();
+        String url = ERROR;
         String searchValue = (String) sessionScope.getAttribute("SEARCHVALUE");
         String nameCate = (String) sessionScope.getAttribute("CATE");
         String min = (String) sessionScope.getAttribute("MIN");
@@ -64,42 +49,28 @@ public class LoginServlet extends HttpServlet {
         if (max == null) {
             max = "1000000";
         }
-
         try {
-            if (sessionScope.getAttribute("INDEX") == null) {
-                index = "1";
-            } else {
-                index = (String) sessionScope.getAttribute("INDEX");
-            }
+            String email = request.getParameter("email");
+            String fullName = request.getParameter("userName");
             tblUserDAO dao = new tblUserDAO();
-            if (password != null && !password.isEmpty()) {
-                fullname = dao.checkLogin(username, password);
-            }
-            if (!fullname.isEmpty()) {
-                tblUserDTO dto = dao.infoUser(username);
-                sessionScope.setAttribute("USERNAME", username);
-                sessionScope.setAttribute("FULLNAME", fullname);
-                url = "DispatchServlet?txtSearchValue=" + searchValue + "&btAction=Search&dropList=" + nameCate + "&txtMin=" + min + "&txtMax=" + max + "&index=" + index;
-                int isAdmin = dao.checkAdmin(username, password);
-                if (isAdmin > 0) {
-                    sessionScope.setAttribute("ADMIN", "admin");
-                    url = MANAGER_PAGE;
+            if (!dao.checkUserNameDuplicate(email)) {
+                int rs = dao.insertUser(email, fullName);
+                if (rs > 0) {
+                    sessionScope.setAttribute("USERNAME", email);
+                    sessionScope.setAttribute("FULLNAME", fullName);
+                    url = "DispatchServlet?txtSearchValue=" + searchValue + "&btAction=Search&dropList=" + nameCate + "&txtMin=" + min + "&txtMax=" + max + "&index=" + index;
                 }
-                sessionScope.setAttribute("ADDRESS", dto.getAddress());
-                sessionScope.setAttribute(("PHONENUM"), dto.getPhoneNum());
             } else {
-                sessionScope.setAttribute("INVALID", "Invalid user or password");
+                sessionScope.setAttribute("USERNAME", email);
+                sessionScope.setAttribute("FULLNAME", fullName);
+                url = "DispatchServlet?txtSearchValue=" + searchValue + "&btAction=Search&dropList=" + nameCate + "&txtMin=" + min + "&txtMax=" + max + "&index=" + index;
             }
-
-        } catch (SQLException se) {
-            log("LoginServlet_SQLException: " + se.getMessage());
-        } catch (NamingException ne) {
-            log("LoginServlet_NamingException: " + ne.getMessage());
-        } catch (NullPointerException ex) {
-            log("LoginServlet_NullPointerException: " + ex.getMessage());
+        } catch (SQLException ex) {
+            log("LoginGgServlet_SQLException: " + ex.getMessage());
+        } catch (NamingException ex) {
+            log("LoginGgServlet_NamingException: " + ex.getMessage());
         } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+            response.sendRedirect(url);
         }
     }
 

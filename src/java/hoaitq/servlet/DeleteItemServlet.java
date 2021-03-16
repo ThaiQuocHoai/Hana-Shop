@@ -7,7 +7,6 @@ package hoaitq.servlet;
 
 import hoaitq.tblFood.tblFoodDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;

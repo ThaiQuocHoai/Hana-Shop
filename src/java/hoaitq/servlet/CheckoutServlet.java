@@ -10,9 +10,7 @@ import hoaitq.cart.CartObject;
 import hoaitq.order.tblOrderDAO;
 import hoaitq.tblFood.tblFoodDAO;
 import hoaitq.tblFood.tblFoodDTO;
-import hoaitq.tblUser.tblUserDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -79,7 +77,10 @@ public class CheckoutServlet extends HttpServlet {
                     if (listError == null) {
                         tblOrderDAO order = new tblOrderDAO();
                         String nameCus = request.getParameter("txtFullname");
-                        int phone = Integer.parseInt(request.getParameter("txtPhone"));
+                        int phone = 0;
+                        if (request.getParameter("txtPhone") != null && !request.getParameter("txtPhone").isEmpty()) {
+                            phone = Integer.parseInt(request.getParameter("txtPhone"));
+                        }
                         float total = Float.parseFloat(request.getParameter("txtTotal"));
                         String address = request.getParameter("txtAddress");
                         if (address.isEmpty()) {

@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
               integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
               crossorigin="anonymous" />
-
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
         <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Rokkitt:100,300,400,700" rel="stylesheet">
 
@@ -48,10 +48,15 @@
         <link rel="stylesheet" href="css/style.css">
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-
+        
+        <!-- Them thu vien  + authen key tren console google api -->
+        <meta name="google-signin-scope" content="profile email">
+        <meta name="google-signin-client_id" content="905724190967-vs4tnt3evtkdl3dk9ld893ko7sj57ohu.apps.googleusercontent.com">
+        <!---->
+        
         <link href="https://fonts.googleapis.com/css?family=Kaushan+Script" rel="stylesheet">
         <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
         <style>
 
             a{
@@ -223,12 +228,11 @@
                                         <span class="span-or">or</span>
                                     </div>
                                 </div>
-                                <div class="col-md-12 mb-3">
-                                    <p class="text-center">
-                                        <a href="javascript:void();" class="google btn mybtn"><i class="fa fa-google-plus">
-                                            </i> Signup using Google
-                                        </a>
-                                    </p>
+                                    <!-- phan nay de goi function onSignIn-->
+                                <div class="col-md-12 mb-3 container text-center">
+                                    <div  class="g-signin2" data-onsuccess="onSignIn"  >
+
+                                    </div>
                                 </div>
                             </form>
 
@@ -315,6 +319,18 @@
         <script src="js/jquery.stellar.min.js"></script>
         <!-- Main -->
         <script src="js/main.js"></script></body>
-
+    <!-- Thêm function để cho phép người dùng đăng nhập gg và logout trên web -->
+    <script>
+        function onSignIn(googleUser) {
+            <!--Phan nay de cho phep nguoi dung dang xuat tren chrome ma khong dang xuat tren gg -->
+            <!--Ben duoi de get profile va tao url rewriting va lay thong tin co ban -->
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+            });
+            
+            var profile = googleUser.getBasicProfile();
+            window.location.href = "DispatchServlet?btAction=Login Google&userName=" + profile.getName() + "&email=" + profile.getEmail() + "&userID=" + profile.getId();
+        }
+    </script>
 </body>
 </html>
